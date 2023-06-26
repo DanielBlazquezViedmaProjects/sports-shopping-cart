@@ -83,7 +83,7 @@ class CartController extends Controller
     }
 
     public function showCart(){
-        $items = Product::get('name');
+        $items = Product::all();
         return view('cart', compact('items'));
     }
 }
