@@ -14,6 +14,7 @@ class CartController extends Controller
         $quantity = $request->input('quantity');
 
         $cart = $request->session()->get('cart');
+
         if (!$cart){
             $cart = new Cart();
         }
@@ -27,7 +28,6 @@ class CartController extends Controller
 
     public function updateCart(Request $request, $productId){
         $quantity = $request->input('quantity');
-
         $product = Product::find($productId);
         if (!$product) {
             return response()->json(['message' => 'Product Not Found'], 404);
@@ -38,7 +38,7 @@ class CartController extends Controller
             $cart->updateItem($productId, $quantity);
             $request->session()->get('cart');
 
-            return response()->json(['message'=>'Quantity Updated']);
+            return response()->json(['message'=>'Quantity Updated to '.$quantity]);
         }
         return response()->json(['message' => 'Product Not Found in Cart'], 404);
 
@@ -46,7 +46,7 @@ class CartController extends Controller
 
     public function removeFromCart(Request $request, $productId){
         $product = Product::find($productId);
-        dd($product);
+
         if (!$product) {
             return response()->json(['message' => 'Product Not Found'], 404);
         }
@@ -80,5 +80,10 @@ class CartController extends Controller
             return response()->json(['message' => 'Purchased is confirmed']);
         }
         return response()->json(['message' => 'Cart is Empty'], 404);
+    }
+
+    public function showCart(){
+        $items = Product::get('name');
+        return view('cart', compact('items'));
     }
 }
